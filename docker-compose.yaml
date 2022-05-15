@@ -11,8 +11,11 @@ services:
     app:
         container_name: app
         build: . # si pongo image: puedo poner una imagen que ya tenemos como app o app/01 , en este caso como queremos hacer el build directamente y que tome el Dockerfile, pongo build: .
+        command: npm run dev # puedo otro comando && npm run dev
         ports:
             - "4000:4000"
             # yo aquí podría configurar redes y todo, pero por ahora lo vamos a dejar hasta ahí
         depends_on:
             - mongo
+        volumes:
+            - ./src:/app/src # creamos un volumen para la aplicación porque no queríamos hacer docker compose build y luego hacer el docker compose up, el cual dice quiero que los archivos que esten en ./src se monten dentro de la carpeta /app/src, para que siempre esten sincronizados y no hayan contra tiempos. El /app/src lo configuramos en el Dockerfile

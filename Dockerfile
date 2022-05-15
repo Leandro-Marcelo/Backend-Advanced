@@ -25,7 +25,7 @@ RUN npm install
 
 #COPY . . lo que estamos diciendo acá es: copia todo el directorio actual (obviamente que ignorando los archivos que estan en el .dockerignore) al directorio de trabajo del contenedor (el cual es /app) 
 
-COPY /src . 
+COPY /src /src
 
 # Una vez ya tenemos la copia de los archivos, vamos a poder exponer un puerto, para que nosotros podamos conectarnos hacía esa aplicación.
 EXPOSE 4000
@@ -34,4 +34,4 @@ EXPOSE 4000
 
 # ¿Podríamos utilizar nodemon ahí en el comando? Si pero tendríamos que instalarlo 
 # ¿Aquí no debería ir el npm start? Si, pero aún no he configurado el script
-CMD [ "node", "index.js" ] 
+#CMD [ "npm", "run", "dev" ]
