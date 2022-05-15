@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+    mongo:
+        container_name: mongo
+        image: mongo # aquí ya ponemos la imagen, ya que solamente vamos a utilizar la imagen de mongo
+        ports: # podemos seleccionar varios puertos, no solamente 1, pero en este caso voy a poner simplemente 1
+            - "27017:27017"
+        volumes:
+            - ./dbdata:/data/db # lo que va hacer es crear una carpeta, aquí en mi proyecto el cual se va a llamar dbdata y ahí es donde va a estar toda la información de la base de datos y en mi contenedor voy a tener una carpeta que sea /data/db y ahí voy a tener toda esa información también.
+    app:
+        container_name: app
+        build: . # si pongo image: puedo poner una imagen que ya tenemos como app o app/01 , en este caso como queremos hacer el build directamente y que tome el Dockerfile, pongo build: .
+        ports:
+            - "4000:4000"
+            # yo aquí podría configurar redes y todo, pero por ahora lo vamos a dejar hasta ahí
+        depends_on:
+            - mongo
