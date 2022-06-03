@@ -11,15 +11,15 @@ datasource db {
 }
 
 model User{
-  id Int @id @default(autoincrement())
   // id type string, i can use => id String @id    (para un uuid for example) 
-  name String @db.VarChar(100)
-  email String @unique
-  password String
+  id Int @id @default(autoincrement())
   // Soft Delete
   active Boolean
   createdAt DateTime @default(now())
-   subscription Subscription?
+  email String @unique
+  name String @db.VarChar(100)
+  password String
+  subscription Subscription?
   // one to many
   folders Folder[]
   files File[]
@@ -27,11 +27,12 @@ model User{
 
 model Folder{
   id Int @id @default(autoincrement())
-  owner User @relation(fields: [ownerId],references: [id])
-  ownerId Int
-  name String
   createdAt DateTime @default(now())
+  folderName String //Google cloud name
+  originalName String
   parentFolderId Int?
+  user User @relation(fields: [userId],references: [id])
+  userId Int
   parentFolder Folder? @relation("FolderSubFolder",fields: [parentFolderId],references: [id])
   childFolders Folder[] @relation("FolderSubFolder")
   files File[]
@@ -39,20 +40,21 @@ model Folder{
 
 model File{
   id Int @id @default(autoincrement())
-  folder Folder? @relation(fields: [folderId],references: [id])
-  folderId Int?
-  name String
   createdAt DateTime @default(now())
-  owner User @relation(fields: [ownerId],references: [id])
-  ownerId Int
+  fileName String //Google cloud name
+  folderId Int?
+  originalName String
+  folder Folder? @relation(fields: [folderId],references: [id])
+  user User @relation(fields: [userId],references: [id])
+  userId Int
 }
 
 // implement subscriptions
 
 model Subscription{
   id Int @id @default(autoincrement())
-  type SubscriptionType @default(FREE)
   createdAt DateTime @default(now())
+  type SubscriptionType @default(FREE)
   // cosas extras que podría almacenar serían cosas como el id de la subscripción, fechas de pago, que me daría la tecnología para implementar esta funcionalidad.
   user User @relation(fields: [userId], references: [id])
   userId Int
