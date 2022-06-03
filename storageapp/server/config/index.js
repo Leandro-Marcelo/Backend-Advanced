@@ -5,8 +5,7 @@ const config = {
     port: process.env.PORT,
 
     /* ********************************* JWT / Tokens *******************************/
-    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
-    refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+    jwtSecret: process.env.JWT_SECRET,
 
     /* *********************************** Files *******************************/
     bucketName: process.env.BUCKET_NAME,

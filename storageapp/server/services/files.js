@@ -1,7 +1,5 @@
 const { uploadFiles, deleteFile, downloadFile } = require("../libs/storage");
-const { PrismaClient } = require("@prisma/client");
-
-const client = new PrismaClient();
+const client = require("../libs/singletonPrisma");
 
 class Files {
     async getFiles() {

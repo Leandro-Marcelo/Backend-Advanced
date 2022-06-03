@@ -30,6 +30,18 @@ class Users {
         }
     }
 
+    async getByFilter(filter) {
+        try {
+            const user = await client.user.findUnique({
+                where: filter,
+            });
+            return { success: true, data: user };
+        } catch (error) {
+            console.log(error);
+            return { success: false, message: "Error finding user" };
+        }
+    }
+
     async updateUser(data) {
         const algo = await client.user.update();
     }

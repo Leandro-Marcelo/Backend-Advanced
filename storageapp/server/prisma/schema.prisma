@@ -28,7 +28,7 @@ model User{
 model Folder{
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
-  folderName String //Google cloud name
+ // folderName String 
   originalName String
   parentFolderId Int?
   user User @relation(fields: [userId],references: [id])
