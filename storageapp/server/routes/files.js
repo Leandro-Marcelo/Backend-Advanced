@@ -25,12 +25,9 @@ function files(app) {
     buffer: <Buffer ff d8 ff e0 00 10 4a 46 49 46 00 01 01 00 00 01 00 01 00 00 ff db 00 84 00 06 06 06 06 07 06 07 08 08 07 0a 0b 0a 0b 0a 0f 0e 0c 0c 0e 0f 16 10 11 10 ... 121089 more bytes>,
     size: 121139
 }, */
-        const results = await fileService.uploadMany(files);
-        console.log(results);
-        return res.json({
-            success: true,
-            message: "Upload successful",
-        });
+        const response = await fileService.uploadMany(files, req.body.id);
+        console.log(response);
+        return res.status(response.success ? 200 : 400).json(response);
     });
 }
 
