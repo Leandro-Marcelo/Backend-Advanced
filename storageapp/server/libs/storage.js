@@ -27,7 +27,9 @@ const uploadFile = (file) => {
     // also you can use uuid.v5() to generate a unique file name
     // the difference is that uuid.v5() is a 128-bit hash, while uuid.v4() is a random 128-bit hash. Ok GitHub Copilot
     // uuid.v4 is more commonly
-    const fileName = uuid.v4() + ext;
+    /* const fileName = uuid.v4() + ext; */
+    // de esta forma al momento de subir un archivo, si la carpeta no existe entonces crea la carpeta con el nombre de test y dentro de esa carpeta se subirá el archivo con el nombre que el usuario estableció originalmente. Si ya existe la carpeta, entonces solamente sube el archivo a esa carpeta. El problema que vamos a tener es que al momento de querer descargarlo, postman va a tomar el test/ como parte de una route. Lo que va a pasar es que en base al id del usuario es que vamos a crear la carpeta, para que solamente en la petición reciba el fileName y ya luego nosotros lo concatenamos con el id del usuario para que viene de la session.
+    const fileName = "test/" + uuid.v4() + ext;
     // reference to the file on the cloud storage
     const cloudFile = storage.bucket(bucketName).file(fileName);
     // Hay un método que es from que nos permite tomar un iterable, donde un buffer es un iterable porque podemos procesar cada chunk que se encuentra en el buffer como si fuera una especie de array para obtener nuestro archivo en formato ReadableStream
@@ -44,11 +46,12 @@ const uploadFile = (file) => {
                     fileName,
                 });
             })
-            .on("error", (err) => {
-                console.log(err);
+            .on("error", (error) => {
+                console.log(error);
                 reject({
                     success: false,
-                    message: "An error ocurred",
+                    message: "Error uploading file",
+                    error,
                 });
             });
     });
@@ -81,8 +84,35 @@ const deleteFile = async (fileName) => {
     }
 };
 
+// "descargamos el archivo gracias a la referencia que nos proporciona cloud storage" y eso lo mandamos haciendo un writable stream, es decir, utilizando res. Si quisieramos descargar muchos archivos podríamos hacerlo de la siguiente manera: comprimir todos los archivos en un solo archivo (zip o rar) y luego enviariamos todo ese comprimido
+const downloadFile = async (fileName, res) => {
+    // reference to the file on the cloud storage
+    const cloudFile = storage.bucket(bucketName).file(fileName);
+    const stream = cloudFile.createReadStream();
+
+    return new Promise((resolve, reject) => {
+        stream.on("error", (error) => {
+            console.log(error);
+            reject({
+                success: false,
+                message: "Error downloading this file in cloud storage",
+                error,
+            });
+        });
+
+        stream.pipe(res);
+
+        stream.on("end", () => {
+            resolve({
+                success: true,
+                message: "Downloaded succesfully",
+            });
+        });
+    });
+};
+
 module.exports = {
     deleteFile,
-    uploadFile,
     uploadFiles,
+    downloadFile,
 };

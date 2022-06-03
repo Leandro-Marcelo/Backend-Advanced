@@ -9,9 +9,21 @@ function files(app) {
     app.use("/api/files", router);
 
     router.get("/", async (req, res) => {
-        const files = await fileService.getAll();
+        const files = await fileService.getFiles();
 
         return res.json(files);
+    });
+
+    router.get("/:fileName", async (req, res) => {
+        const { fileName } = req.params;
+
+        const response = await fileService.getFile(fileName, res);
+        if (response.success) {
+            // to close the response
+            return res.end();
+        }
+        // normallly we would return a status code 404
+        return res.status(404).json(response);
     });
 
     // upload.array("files") para recibir varios archivos (se debe de enviar en form-data y en campos llamado files y multer los almacenará en req.files), upload.single("file") para recibir un solo archivo (se debe de enviar en form-data y en un campo llamado file y multer lo almacenará en req.file), upload.any() para recibir varios archivos (se debe de enviar en form-data y no debemos enviarlo con un campo en específico, ya que lo almacenará en req.files por defecto), upload.fields() Accept a mix of files, specified by fields. An object with arrays of files will be stored in req.files. More in documentation.

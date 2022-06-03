@@ -1,13 +1,37 @@
-const { uploadFile, uploadFiles, deleteFile } = require("../libs/storage");
+const { uploadFiles, deleteFile, downloadFile } = require("../libs/storage");
 const { PrismaClient } = require("@prisma/client");
 
 const client = new PrismaClient();
 
 class Files {
-    async getAll() {
+    async getFiles() {
         const files = await client.file.findMany();
 
         return files;
+    }
+
+    async getFile(fileName, res) {
+        try {
+            const file = await client.file.findUnique({
+                where: {
+                    fileName,
+                },
+            });
+
+            if (!file) {
+                return {
+                    success: false,
+                    message: "File not found",
+                };
+            }
+            return await downloadFile(fileName, res);
+        } catch (error) {
+            console.log(error);
+            return {
+                success: false,
+                message: "Error downloading file",
+            };
+        }
     }
 
     async uploadMany(files, userId) {
