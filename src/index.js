@@ -6,11 +6,11 @@ const app = express();
 //Mongoose
 // uri: mongodb://mongo:27017/ myDB)
 // ¿Por qué mongo y no localhost? Lo que hace Docker es generar una tabla de dns y en lugar de trabajar con la direccion IP y a lo mejor el nombre del servicio, ya le asigna un nombre entonces en lugar de poner localhost simplemente se pone mongo y ya
-/* connection(); */
+connection();
 
 app.get("/", async (req, res) => {
     return res.json({
-        nombre: "1",
+        nombre: "1111",
         correo: "1",
         telefono: "1ununu",
         casa: "1aaaa",
