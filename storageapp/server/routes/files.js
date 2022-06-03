@@ -8,6 +8,12 @@ function files(app) {
 
     app.use("/api/files", router);
 
+    router.get("/", async (req, res) => {
+        const files = await fileService.getAll();
+
+        return res.json(files);
+    });
+
     // upload.array("files") para recibir varios archivos (se debe de enviar en form-data y en campos llamado files y multer los almacenará en req.files), upload.single("file") para recibir un solo archivo (se debe de enviar en form-data y en un campo llamado file y multer lo almacenará en req.file), upload.any() para recibir varios archivos (se debe de enviar en form-data y no debemos enviarlo con un campo en específico, ya que lo almacenará en req.files por defecto), upload.fields() Accept a mix of files, specified by fields. An object with arrays of files will be stored in req.files. More in documentation.
 
     // OKEY GITHUB COPILOT: upload.fields para recibir varios campos, upload.fields.files para recibir varios campos y archivos, upload.fields.files para recibir un solo campo y un solo archivo, upload.fields.files para recibir un solo campo y varios archivos, upload.fields.files para recibir varios campos y un solo archivo, upload.fields.files para recibir varios campos y varios archivos
@@ -28,6 +34,15 @@ function files(app) {
         const response = await fileService.uploadMany(files, req.body.id);
         console.log(response);
         return res.status(response.success ? 200 : 400).json(response);
+    });
+
+    /* router.delete(/:fileId) esto si es que queremos eliminar un archivo, /delete para recibir en el body todos los file que quiere eliminar */
+    router.delete("/delete", async (req, res) => {
+        const { files } = req.body;
+
+        const result = await fileService.deleteMany(files);
+
+        return res.json(result);
     });
 }
 

@@ -41,7 +41,7 @@ model Folder{
 model File{
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
-  fileName String //Google cloud name
+  fileName String @unique //Google cloud name
   folderId Int?
   originalName String
   folder Folder? @relation(fields: [folderId],references: [id])

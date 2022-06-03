@@ -62,7 +62,27 @@ const uploadFiles = async (files) => {
     return results;
 };
 
+const deleteFile = async (fileName) => {
+    // reference to the file on the cloud storage
+    const cloudFile = storage.bucket(bucketName).file(fileName);
+    try {
+        await cloudFile.delete(); // Http response
+
+        return {
+            success: true,
+            fileName,
+        };
+    } catch (error) {
+        console.log(error);
+        return {
+            success: false,
+            message: "Error deleting this file in cloud storage",
+        };
+    }
+};
+
 module.exports = {
+    deleteFile,
     uploadFile,
     uploadFiles,
 };
